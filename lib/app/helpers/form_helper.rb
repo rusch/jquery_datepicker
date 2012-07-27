@@ -7,9 +7,15 @@ module JqueryDatepicker
 
     # Mehtod that generates datepicker input field inside a form
     def datepicker(object_name, method, options = {}, timepicker = false)
-      input_tag =  JqueryDatepicker::InstanceTag.new(object_name, method, self, options.delete(:object))
+      input_tag = JqueryDatepicker::InstanceTag.new(object_name, method, self, options.delete(:object))
       dp_options, tf_options =  input_tag.split_options(options)
-      tf_options[:value] = input_tag.format_date(tf_options[:value], String.new(dp_options[:dateFormat]), timepicker) if  tf_options[:value] && !tf_options[:value].empty? && dp_options.has_key?(:dateFormat)
+      if dp_options[:dateFormat]
+        val = input_tag.value_before_type_cast(input_tag.object)
+        if !val.blank?
+          tf_options[:value] = input_tag.format_date(val,
+            dp_options[:dateFormat], timepicker)
+        end
+      end
       html = input_tag.to_input_field_tag("text", tf_options)
       method = timepicker ? "datetimepicker" : "datepicker"
       html += javascript_tag("jQuery(document).ready(function(){jQuery('##{input_tag.get_name_and_id["id"]}').#{method}(#{dp_options.to_json})});")
@@ -54,7 +60,9 @@ class JqueryDatepicker::InstanceTag < ActionView::Helpers::InstanceTag
   def format_date(tb_formatted, format, include_time = false)
     new_format = translate_format(format)
     new_format += " %R" if include_time
-    Date.parse(tb_formatted).strftime(new_format)
+    val = (tb_formatted.is_a?(Date) || tb_formatted.is_a?(Time)) ?
+      tb_formatted : Date.parse(tb_formatted)
+    return val.strftime(new_format)
   end
 
   # Method that translates the datepicker date formats, defined in (http://docs.jquery.com/UI/Datepicker/formatDate)
