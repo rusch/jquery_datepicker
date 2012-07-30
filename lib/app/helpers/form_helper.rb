@@ -70,7 +70,7 @@ class JqueryDatepicker::InstanceTag < ActionView::Helpers::InstanceTag
   # This gem is not going to support all the options, just the most used.
   
   def translate_format(format)
-    format.gsub!(/#{FORMAT_REPLACEMENTES.keys.join("|")}/) { |match| FORMAT_REPLACEMENTES[match] }
+    format.gsub(/#{FORMAT_REPLACEMENTES.keys.join("|")}/) { |match| FORMAT_REPLACEMENTES[match] }
   end
 
 end
