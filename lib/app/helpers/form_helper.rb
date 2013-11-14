@@ -60,9 +60,15 @@ class JqueryDatepicker::InstanceTag < ActionView::Helpers::InstanceTag
   def format_date(tb_formatted, format, include_time = false)
     new_format = translate_format(format)
     new_format += " %R" if include_time
-    val = (tb_formatted.is_a?(Date) || tb_formatted.is_a?(Time)) ?
-      tb_formatted : Date.parse(tb_formatted)
-    return val.strftime(new_format)
+    if tb_formatted.is_a?(Date) || tb_formatted.is_a?(Time)
+      return tb_formatted.strftime(new_format)
+    end
+
+    begin
+      return Date.parse(tb_formatted).strftime(new_format)
+    rescue
+    end
+    return tb_formatted
   end
 
   # Method that translates the datepicker date formats, defined in (http://docs.jquery.com/UI/Datepicker/formatDate)
