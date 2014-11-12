@@ -10,7 +10,7 @@ module JqueryDatepicker
       input_tag = JqueryDatepicker::InstanceTag.new(object_name, method, self, options.delete(:object))
       dp_options, tf_options =  input_tag.split_options(options)
       if dp_options[:dateFormat]
-        val = input_tag.value_before_type_cast(input_tag.object)
+        val = input_tag.object.send(method)
         if !val.blank?
           tf_options[:value] = input_tag.format_date(val,
             dp_options[:dateFormat], timepicker)
@@ -66,9 +66,9 @@ class JqueryDatepicker::InstanceTag < ActionView::Helpers::InstanceTag
 
     begin
       if include_time
-        return Time.zone.parse(tb_formatted)
+        Time.parse(tb_formatted)
       else
-        return Date.parse(tb_formatted)
+        Date.parse(tb_formatted)
       end.strftime(new_format)
     rescue
       nil
