@@ -5,7 +5,7 @@ module JqueryDatepicker
     
     include ActionView::Helpers::JavaScriptHelper
 
-    # Mehtod that generates datepicker input field inside a form
+    # Method that generates datepicker input field inside a form
     def datepicker(object_name, method, options = {}, timepicker = false)
       input_tag = JqueryDatepicker::InstanceTag.new(object_name, method, self, options.delete(:object))
       dp_options, tf_options =  input_tag.split_options(options)
@@ -65,10 +65,14 @@ class JqueryDatepicker::InstanceTag < ActionView::Helpers::InstanceTag
     end
 
     begin
-      return Date.parse(tb_formatted).strftime(new_format)
+      if include_time
+        return Time.zone.parse(tb_formatted)
+      else
+        return Date.parse(tb_formatted)
+      end.strftime(new_format)
     rescue
+      nil
     end
-    return tb_formatted
   end
 
   # Method that translates the datepicker date formats, defined in (http://docs.jquery.com/UI/Datepicker/formatDate)
