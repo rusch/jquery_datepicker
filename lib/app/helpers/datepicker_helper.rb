@@ -28,8 +28,8 @@ module JqueryDatepicker
       datepicker_input(name, value, options, true)
     end
 
-    alias :datepicker_input, :date_input_tag
-    alias :datetime_picker_input, :datetime_input_tag
+    alias :datepicker_input :date_input_tag
+    alias :datetime_picker_input :datetime_input_tag
   end
 
 end
