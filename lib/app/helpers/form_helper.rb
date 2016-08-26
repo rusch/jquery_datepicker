@@ -113,7 +113,7 @@ module JqueryDatepicker::InstanceTag
 
   def to_date_input_tag(options = {}, with_time = false)
     tag_options, jquery_options = separate_tag_and_jquery_options(options)
-    jquery_method = with_time ? 'datepicker' : 'datetimepicker'
+    jquery_method = with_time ? 'datetimepicker' : 'datepicker'
     html = to_input_field_tag('text', tag_options)
     html += sprintf(
       '<script type="text/javascript">$(document).ready(function () { $("input#%s").%s(%s); });</script>',
